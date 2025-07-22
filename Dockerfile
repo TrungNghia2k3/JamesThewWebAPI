@@ -13,7 +13,7 @@ RUN mvn mvn clean package -DskipTests
 
 # Use Tomcat 9.0.106 với JDK 21 để chạy ứng dụng
 # (Lưu ý: Sự kết hợp này có thể không chính thức được hỗ trợ hoàn toàn bởi Apache Tomcat)
-FROM tomcat:9.0.106-jdk21-temurin  # Đã đổi phiên bản Tomcat chính xác hơn
+FROM tomcat:9.0.106-jdk21-temurin
 
 # Remove default web applications that come with Tomcat
 RUN rm -rf /usr/local/tomcat/webapps/*
