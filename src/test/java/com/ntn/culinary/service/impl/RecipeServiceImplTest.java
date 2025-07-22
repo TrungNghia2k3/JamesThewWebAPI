@@ -6,6 +6,7 @@ import com.ntn.culinary.model.DetailedInstructions;
 import com.ntn.culinary.model.Nutrition;
 import com.ntn.culinary.model.Recipe;
 import com.ntn.culinary.response.RecipeResponse;
+import com.ntn.culinary.service.RecipeService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -47,7 +48,7 @@ class RecipeServiceImplTest {
     private NutritionDao nutritionDao;
 
     @InjectMocks
-    private RecipeServiceImpl recipeService;
+    private RecipeService recipeService;
 
     @Test
     void testSearchAndFilter_withValidData_shouldReturnMappedResponse() {

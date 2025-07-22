@@ -6,6 +6,7 @@ import com.ntn.culinary.exception.NotFoundException;
 import com.ntn.culinary.model.ContestEntry;
 import com.ntn.culinary.model.ContestEntryInstruction;
 import com.ntn.culinary.request.ContestEntryRequest;
+import com.ntn.culinary.service.ContestEntryService;
 import com.ntn.culinary.utils.ImageUtils;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -37,7 +38,7 @@ class ContestEntryServiceImplTest {
     @Mock private Part imagePart;
 
     @InjectMocks
-    private ContestEntryServiceImpl contestEntryService;
+    private ContestEntryService contestEntryService;
 
     @Test // User không tồn tại
     @Disabled
