@@ -2,7 +2,6 @@ package com.ntn.culinary.servlet;
 
 import com.ntn.culinary.dao.*;
 import com.ntn.culinary.dao.impl.*;
-import com.ntn.culinary.response.ApiResponse;
 import com.ntn.culinary.response.RecipePageResponse;
 import com.ntn.culinary.response.RecipeResponse;
 import com.ntn.culinary.service.RecipeService;

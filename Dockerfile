@@ -1,5 +1,6 @@
 # Base image with Maven and Java installed for the build stage
-FROM maven:3.9.6-eclipse-temurin-21 AS build
+# Sử dụng Maven với JDK 17 để phù hợp với việc build target 17
+FROM maven:3.9.6-eclipse-temurin-17 AS build  # Đã thay đổi từ 21 xuống 17
 
 # Set the working directory inside the container
 WORKDIR /app
@@ -10,9 +11,9 @@ COPY . .
 # Build the WAR file using Maven, skipping tests
 RUN mvn clean package -DskipTests
 
-# Use Tomcat 10.1 with JDK 21 as the base image for running the application
-# This ensures compatibility with the JDK 21 compilation used in the build stage.
-FROM tomcat:10.1-jdk21
+# Use Tomcat 9.0 với JDK 17 để chạy ứng dụng
+# Tomcat 9.0 hỗ trợ javax.servlet-api và chạy tốt với JDK 17
+FROM tomcat:9.0-jdk17  # Đã thay đổi từ 10.1-jdk21 xuống 9.0-jdk17
 
 # Remove default web applications that come with Tomcat
 RUN rm -rf /usr/local/tomcat/webapps/*
