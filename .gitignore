@@ -5,3 +5,7 @@
 # Maven build directory
 target/
 out/artifacts/
+
+
+.env
+src/main/resources/.env
