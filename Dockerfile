@@ -1,5 +1,5 @@
 # Base image with Maven and Java installed for the build stage
-# Sử dụng Maven với JDK 21
+# Using Maven with JDK 21 for compilation target
 FROM maven:3.9.6-eclipse-temurin-21 AS build
 
 # Set the working directory inside the container
@@ -9,10 +9,12 @@ WORKDIR /app
 COPY . .
 
 # Build the WAR file using Maven, skipping tests
-RUN mvn mvn clean package -DskipTests
+RUN mvn clean package -DskipTests
 
-# Use Tomcat 9.0.106 với JDK 21 để chạy ứng dụng
-# (Lưu ý: Sự kết hợp này có thể không chính thức được hỗ trợ hoàn toàn bởi Apache Tomcat)
+# Use Tomcat 9.0.106 with JDK 21 to run the application
+# (Note: This combination might not be officially fully supported by Apache Tomcat,
+# as Tomcat 9.x typically aligns with older JDKs and Jakarta EE 8 / javax.servlet APIs.
+# JDK 21 usually pairs with Tomcat 10.1+ and Jakarta EE 9/10 / jakarta.servlet APIs.)
 FROM tomcat:9.0.106-jdk21-temurin
 
 # Remove default web applications that come with Tomcat
