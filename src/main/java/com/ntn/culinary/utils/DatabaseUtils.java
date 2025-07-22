@@ -1,6 +1,6 @@
 package com.ntn.culinary.utils;
 
-import io.github.cdimascio.dotenv.Dotenv;
+// import io.github.cdimascio.dotenv.Dotenv; // Xóa dòng này
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -24,10 +24,15 @@ public class DatabaseUtils {
             }
         } else {
             // MySQL
-            Dotenv dotenv = Dotenv.load();
-            JDBC_URL = dotenv.get("DB_URL");
-            JDBC_USER = dotenv.get("DB_USERNAME");
-            JDBC_PASS = dotenv.get("DB_PASSWORD");
+            // Dotenv dotenv = Dotenv.load(); // Xóa hoặc comment dòng này
+            JDBC_URL = System.getenv("DB_URL");       // Sửa thành System.getenv()
+            JDBC_USER = System.getenv("DB_USERNAME"); // Sửa thành System.getenv()
+            JDBC_PASS = System.getenv("DB_PASSWORD"); // Sửa thành System.getenv()
+
+            if (JDBC_URL == null || JDBC_USER == null || JDBC_PASS == null) {
+                throw new RuntimeException("Database environment variables (DB_URL, DB_USERNAME, DB_PASSWORD) are not set.");
+            }
+
             try {
                 Class.forName("com.mysql.cj.jdbc.Driver");
             } catch (ClassNotFoundException e) {
