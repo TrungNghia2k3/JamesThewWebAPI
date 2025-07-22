@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 
 import static com.ntn.culinary.response.ApiResponse.error;
 
-@WebFilter(urlPatterns = "/api/protected/*")
+//@WebFilter(urlPatterns = "/api/protected/*")
 public class JwtFilter implements Filter {
 
     private final JwtService jwtService;

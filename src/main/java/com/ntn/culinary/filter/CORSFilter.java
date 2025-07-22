@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 // Filter áp dụng cho TẤT CẢ request (/*) đến server
-@WebFilter("/*")
+//@WebFilter("/*")
 public class CORSFilter implements Filter {
 
     @Override
