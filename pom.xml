@@ -78,12 +78,6 @@
       <version>0.11.5</version>
       <scope>runtime</scope>
     </dependency>
-    <!-- 5.Java-dotenv -->
-    <dependency>
-      <groupId>io.github.cdimascio</groupId>
-      <artifactId>java-dotenv</artifactId>
-      <version>5.2.2</version>
-    </dependency>
     <!-- 6. Jbcrypt -->
     <dependency>
       <groupId>org.mindrot</groupId>

@@ -4,7 +4,6 @@ import com.ntn.culinary.model.Permission;
 import com.ntn.culinary.model.Role;
 import com.ntn.culinary.model.User;
 import com.ntn.culinary.service.JwtService;
-import io.github.cdimascio.dotenv.Dotenv;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -17,8 +16,7 @@ import java.util.stream.Collectors;
 import static com.ntn.culinary.utils.CastUtils.toStringList;
 
 public class JwtServiceImpl implements JwtService {
-    private static final Dotenv dotenv = Dotenv.load();
-    private static final String SECRET_KEY = dotenv.get("SECRET_KEY");
+    private static final String SECRET_KEY = System.getenv("SECRET_KEY");
     private static final long EXPIRATION_TIME = 86400000; // 24 hours
 
     @Override
