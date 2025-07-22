@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import static com.ntn.culinary.constant.Cloudinary.CLOUDINARY_URL;
 import static com.ntn.culinary.utils.StringUtils.capitalize;
 
 public class RecipeServiceImpl implements RecipeService {
@@ -351,8 +352,8 @@ public class RecipeServiceImpl implements RecipeService {
     private RecipeResponse mapRecipeToResponse(
             Recipe recipe, Map<Integer, List<Comment>> commentsMap, Map<Integer, Nutrition> nutritionMap, Map<Integer, List<DetailedInstructions>> instructionsMap) {
 
-        String imageUrl = baseUrl + "/api/images/recipes/" + recipe.getImage();
-        String instructionImageUrl = baseUrl + "/api/images/instructions/";
+        String imageUrl = CLOUDINARY_URL + "recipes/" + recipe.getImage();
+        String instructionImageUrl = CLOUDINARY_URL + "instructions/";
 
         List<DetailedInstructions> instructions = Optional.ofNullable(instructionsMap.get(recipe.getId()))
                 .orElse(Collections.emptyList())

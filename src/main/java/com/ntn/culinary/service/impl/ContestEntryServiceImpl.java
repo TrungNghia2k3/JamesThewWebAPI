@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static com.ntn.culinary.constant.Cloudinary.CLOUDINARY_URL;
 import static com.ntn.culinary.utils.ImageUtils.*;
 
 public class ContestEntryServiceImpl implements ContestEntryService {
@@ -260,7 +261,7 @@ public class ContestEntryServiceImpl implements ContestEntryService {
 
     private ContestEntryResponse mapContestEntryToResponse(ContestEntry contestEntry) {
 
-        String imageUrl = "http://localhost:8080/JamesThewWebApplication/api/images/contest_entry/" + contestEntry.getImage();
+        String imageUrl = CLOUDINARY_URL + "contest_entry/" + contestEntry.getImage();
 
         ContestEntryResponse response = new ContestEntryResponse();
         response.setId(contestEntry.getId());

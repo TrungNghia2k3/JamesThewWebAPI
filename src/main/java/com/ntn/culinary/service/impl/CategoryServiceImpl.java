@@ -10,6 +10,7 @@ import com.ntn.culinary.service.CategoryService;
 
 import java.util.List;
 
+import static com.ntn.culinary.constant.Cloudinary.CLOUDINARY_URL;
 import static com.ntn.culinary.utils.ImageUtils.*;
 import static java.util.stream.Collectors.toList;
 
@@ -125,7 +126,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     private CategoryResponse mapCategoryToResponse(Category category) {
-        String imageUrl = "http://localhost:8080/JamesThewWebApplication/api/images/categories/" + category.getPath();
+        String imageUrl = CLOUDINARY_URL + "categories/" + category.getPath();
         return new CategoryResponse(
                 category.getId(),
                 category.getName(),

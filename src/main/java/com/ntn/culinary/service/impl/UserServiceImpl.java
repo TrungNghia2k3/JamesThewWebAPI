@@ -13,6 +13,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.ntn.culinary.constant.Cloudinary.CLOUDINARY_URL;
 import static com.ntn.culinary.utils.ImageUtils.*;
 
 public class UserServiceImpl implements UserService {
@@ -124,7 +125,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private UserResponse mapUserToResponse(User user) {
-        String imageUrl = "http://localhost:8080/JamesThewWebApplication/api/images/avatars/";
+        String imageUrl = CLOUDINARY_URL + "avatars/";
 
         UserResponse response = new UserResponse();
         response.setId(user.getId());

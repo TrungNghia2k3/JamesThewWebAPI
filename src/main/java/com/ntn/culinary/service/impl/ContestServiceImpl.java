@@ -13,6 +13,7 @@ import com.ntn.culinary.service.ContestService;
 import java.sql.Date;
 import java.util.List;
 
+import static com.ntn.culinary.constant.Cloudinary.CLOUDINARY_URL;
 import static com.ntn.culinary.utils.ImageUtils.*;
 
 public class ContestServiceImpl implements ContestService {
@@ -150,7 +151,7 @@ public class ContestServiceImpl implements ContestService {
     }
 
     private ContestResponse mapContestToResponse(Contest contest) {
-        String url = "http://localhost:8080/JamesThewWebApplication/api/images/contests/";
+        String url = CLOUDINARY_URL + "contests/";
 
         List<ContestImages> images = contestImagesDao.getContestImagesByContestId(contest.getId())
                 .stream()
