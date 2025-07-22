@@ -1,6 +1,6 @@
 # Base image with Maven and Java installed for the build stage
-# Using Maven with JDK 21 for compilation target
-FROM maven:3.9.6-eclipse-temurin-21 AS build
+# Using Maven with JDK 17 for better compatibility
+FROM maven:3.9.6-eclipse-temurin-17 AS build
 
 # Set the working directory inside the container
 WORKDIR /app
@@ -11,11 +11,9 @@ COPY . .
 # Build the WAR file using Maven, skipping tests
 RUN mvn clean package -DskipTests
 
-# Use Tomcat 9.0.106 with JDK 21 to run the application
-# (Note: This combination might not be officially fully supported by Apache Tomcat,
-# as Tomcat 9.x typically aligns with older JDKs and Jakarta EE 8 / javax.servlet APIs.
-# JDK 21 usually pairs with Tomcat 10.1+ and Jakarta EE 9/10 / jakarta.servlet APIs.)
-FROM tomcat:9.0.106-jdk21-temurin
+# Use Tomcat 9.0.106 with JDK 17 for better compatibility
+# Tomcat 9.x works well with JDK 8-17 and javax.servlet APIs
+FROM tomcat:9.0.106-jdk17-temurin
 
 # Remove default web applications that come with Tomcat
 RUN rm -rf /usr/local/tomcat/webapps/*
