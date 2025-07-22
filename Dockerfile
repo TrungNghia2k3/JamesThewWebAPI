@@ -1,5 +1,5 @@
 # Base image with Maven and Java installed for the build stage
-# Using Maven with JDK 17 for better compatibility
+# Using Maven with JDK 17 for compilation target
 FROM maven:3.9.6-eclipse-temurin-17 AS build
 
 # Set the working directory inside the container
@@ -11,7 +11,7 @@ COPY . .
 # Build the WAR file using Maven, skipping tests
 RUN mvn clean package -DskipTests
 
-# Use Tomcat 9.0.106 with JDK 17 for better compatibility
+# Use Tomcat 9.0.106 with JDK 17
 # Tomcat 9.x works well with JDK 8-17 and javax.servlet APIs
 FROM tomcat:9.0.106-jdk17-temurin
 
