@@ -1,9 +1,0 @@
-com\ntn\culinary\service\impl\AreaServiceImplTest.class
-com\ntn\culinary\service\impl\AuthServiceImplTest.class
-com\ntn\culinary\service\impl\AnnouncementImplServiceTest.class
-com\ntn\culinary\dao\AnnouncementDaoTest.class
-com\ntn\culinary\dao\AreaDaoTest.class
-com\ntn\culinary\dao\UserDaoTest.class
-com\ntn\culinary\fixture\TestDataFactory.class
-com\ntn\culinary\service\impl\ContestEntryServiceImplTest.class
-com\ntn\culinary\service\impl\RecipeServiceImplTest.class
