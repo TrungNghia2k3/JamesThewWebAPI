@@ -211,7 +211,7 @@ class UserDaoTest {
 
         List<Role> roles = retrieved.getRoles().stream().toList();
         assertEquals(1, roles.size());
-        assertEquals("ADMIN", roles.getFirst().getName());
+        assertEquals("ADMIN", roles.get(0).getName());
 
         List<Permission> permissions = retrieved.getPermissions().stream().toList();
         assertEquals(0, permissions.size()); // user1 không có quyền nào
@@ -232,7 +232,7 @@ class UserDaoTest {
 
         List<Role> roles = retrieved.getRoles().stream().toList();
         assertEquals(1, roles.size());
-        assertEquals("STAFF", roles.getFirst().getName());
+        assertEquals("STAFF", roles.get(0).getName());
 
         List<Permission> permissions = retrieved.getPermissions().stream().toList();
         assertEquals(3, permissions.size());

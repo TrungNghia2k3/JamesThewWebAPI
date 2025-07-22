@@ -73,11 +73,11 @@ class RecipeServiceImplTest {
 
         // Assert
         assertEquals(1, responses.size());
-        RecipeResponse response = responses.getFirst();
+        RecipeResponse response = responses.get(0);
         assertEquals("Pho Bo", response.getName());
         assertEquals("Vietnamese", response.getCategory());
         assertEquals(1, response.getComments().size());
-        assertEquals("Great recipe!", response.getComments().getFirst().getContent());
+        assertEquals("Great recipe!", response.getComments().get(0).getContent());
         assertEquals(1, response.getDetailedInstructions().size());
         assertTrue(response.getImage().contains("pho.jpg"));
     }

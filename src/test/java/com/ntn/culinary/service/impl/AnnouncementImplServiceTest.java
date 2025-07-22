@@ -67,11 +67,11 @@ class AnnouncementImplServiceTest {
 
         // Assert
         assertEquals(1, responses.size());
-        AnnouncementResponse response = responses.getFirst();
+        AnnouncementResponse response = responses.get(0);
         assertEquals("Test Announcement", response.getTitle());
         assertEquals("Contest Headline", response.getContest().getHeadline());
         assertEquals(1, response.getWinners().size());
-        assertEquals("Entry Title", response.getWinners().getFirst().getContestEntry().getName());
+        assertEquals("Entry Title", response.getWinners().get(0).getContestEntry().getName());
 
         verify(announcementDao).getAllAnnouncements();
         verify(contestDao).getContestById(42);
@@ -141,11 +141,11 @@ class AnnouncementImplServiceTest {
 
         // Assert
         assertEquals(1, responses.size());
-        AnnouncementResponse response = responses.getFirst();
+        AnnouncementResponse response = responses.get(0);
         assertEquals("Test Announcement", response.getTitle());
         assertEquals("Contest Headline", response.getContest().getHeadline());
         assertEquals(1, response.getWinners().size());
-        assertEquals("Entry Title", response.getWinners().getFirst().getContestEntry().getName());
+        assertEquals("Entry Title", response.getWinners().get(0).getContestEntry().getName());
 
         verify(announcementDao).getAllAnnouncements();
         verify(contestDao).getContestById(42);
@@ -198,7 +198,7 @@ class AnnouncementImplServiceTest {
         List<AnnounceWinner> insertedWinners = winnerCaptor.getAllValues();
 
         // Assert winner 1
-        AnnounceWinner w1 = insertedWinners.getFirst();
+        AnnounceWinner w1 = insertedWinners.get(0);
         assertEquals(10, w1.getAnnouncementId());
         assertEquals(100, w1.getContestEntryId());
         assertEquals("1", w1.getRanking());
@@ -308,7 +308,7 @@ class AnnouncementImplServiceTest {
         verify(announceWinnerDao, times(2)).updateWinner(winnerCaptor.capture());
 
         List<AnnounceWinner> updatedWinners = winnerCaptor.getAllValues();
-        assertEquals("1", updatedWinners.getFirst().getRanking());
+        assertEquals("1", updatedWinners.get(0).getRanking());
         assertEquals("2", updatedWinners.get(1).getRanking());
     }
 
