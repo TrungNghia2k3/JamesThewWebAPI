@@ -66,5 +66,12 @@ public interface AreaDao {
      */
     Area getAreaByName(String name);
 
+    /**
+     * Checks if an area with the specified name exists, excluding a specific id.
+     *
+     * @param id   the id to exclude from the check
+     * @param name the name of the area to check
+     * @return true if an area with the specified name exists excluding the given id, false otherwise
+     */
     boolean existsAreaWithNameExcludingId(int id, String name);
 }

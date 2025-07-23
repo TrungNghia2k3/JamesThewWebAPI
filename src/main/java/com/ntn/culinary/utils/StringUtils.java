@@ -13,4 +13,15 @@ public class StringUtils {
         //the first char of the input string
         return inputString.replace(inputString.charAt(0), capitalFirstLetter);
     }
+
+    /**
+     * Hàm slugify đơn giản chuyển chuỗi thành dạng url-safe
+     */
+    public static String slugify(String input) {
+        if (input == null) return "";
+        return input.toLowerCase()
+                .replaceAll("[^\\w\\s-]", "")
+                .replaceAll("\\s+", "-")
+                .trim();
+    }
 }

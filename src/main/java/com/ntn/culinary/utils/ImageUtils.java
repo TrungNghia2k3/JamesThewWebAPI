@@ -57,28 +57,15 @@ public class ImageUtils {
      *
      * @param filename Tên file cần xóa (vd: apple-frangipan-1689012345678.jpg)
      * @param type     Thư mục con (vd: "recipes", "avatars", ...)
-     * @return true nếu xóa thành công, false nếu file không tồn tại
      */
-    public static boolean deleteImage(String filename, String type) {
+    public static void deleteImage(String filename, String type) {
         if (filename == null || filename.isEmpty()) {
-            return false;
+            return;
         }
 
         File file = new File(IMAGE_DIRECTORY + "/" + type, filename);
         if (file.exists()) {
-            return file.delete();
+            file.delete();
         }
-        return false;
-    }
-
-    /**
-     * Hàm slugify đơn giản chuyển chuỗi thành dạng url-safe
-     */
-    public static String slugify(String input) {
-        if (input == null) return "";
-        return input.toLowerCase()
-                .replaceAll("[^\\w\\s-]", "")
-                .replaceAll("\\s+", "-")
-                .trim();
     }
 }

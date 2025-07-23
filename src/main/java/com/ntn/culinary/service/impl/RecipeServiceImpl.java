@@ -21,6 +21,7 @@ import java.util.Optional;
 
 import static com.ntn.culinary.constant.Cloudinary.CLOUDINARY_URL;
 import static com.ntn.culinary.utils.StringUtils.capitalize;
+import static com.ntn.culinary.utils.StringUtils.slugify;
 
 public class RecipeServiceImpl implements RecipeService {
 
@@ -49,7 +50,7 @@ public class RecipeServiceImpl implements RecipeService {
         validateRecipeRequest(recipeRequest);
 
         if (imagePart != null && imagePart.getSize() > 0) {
-            String slug = ImageUtils.slugify(recipeRequest.getName());
+            String slug = slugify(recipeRequest.getName());
             String fileName = ImageUtils.saveImage(imagePart, slug, "recipes");
             recipeRequest.setImage(fileName);
         }
@@ -71,7 +72,7 @@ public class RecipeServiceImpl implements RecipeService {
             if (existingRecipe.getImage() != null) {
                 ImageUtils.deleteImage(existingRecipe.getImage(), "recipes");
             }
-            String slug = ImageUtils.slugify(recipeRequest.getName());
+            String slug = slugify(recipeRequest.getName());
             String fileName = ImageUtils.saveImage(imagePart, slug, "recipes");
             recipeRequest.setImage(fileName);
         } else {

@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static com.ntn.culinary.fixture.TestDataFactory.createContestEntryRequest;
+import static com.ntn.culinary.utils.StringUtils.slugify;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
@@ -103,7 +104,7 @@ class ContestEntryServiceImplTest {
 
         // Mock static ImageUtils
         try (MockedStatic<ImageUtils> imageUtilsMock = mockStatic(ImageUtils.class)) {
-            imageUtilsMock.when(() -> ImageUtils.slugify(anyString()))
+            imageUtilsMock.when(() -> slugify(anyString()))
                     .thenReturn("slug");
             imageUtilsMock.when(() -> ImageUtils.saveImage(eq(imagePart), eq("slug"), eq("contest_entries")))
                     .thenReturn("saved_image.jpg");

@@ -15,6 +15,7 @@ import java.util.List;
 
 import static com.ntn.culinary.constant.Cloudinary.CLOUDINARY_URL;
 import static com.ntn.culinary.utils.ImageUtils.*;
+import static com.ntn.culinary.utils.StringUtils.slugify;
 
 public class ContestServiceImpl implements ContestService {
     private final ContestDao contestDao;

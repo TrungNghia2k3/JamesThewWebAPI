@@ -12,6 +12,7 @@ import java.util.List;
 
 import static com.ntn.culinary.constant.Cloudinary.CLOUDINARY_URL;
 import static com.ntn.culinary.utils.ImageUtils.*;
+import static com.ntn.culinary.utils.StringUtils.slugify;
 import static java.util.stream.Collectors.toList;
 
 public class CategoryServiceImpl implements CategoryService {

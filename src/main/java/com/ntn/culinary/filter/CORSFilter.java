@@ -22,26 +22,22 @@ public class CORSFilter implements Filter {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
 
-        // CORS: Cho phép frontend từ localhost:5173 gọi API
-        httpResponse.setHeader("Access-Control-Allow-Origin", "http://localhost:5173");
+        // Cho phép origin cụ thể (localhost + Vercel)
+        String origin = httpRequest.getHeader("Origin");
+        if ("http://localhost:5173".equals(origin) || "https://james-thew-web-app.vercel.app".equals(origin)) {
+            httpResponse.setHeader("Access-Control-Allow-Origin", origin);
+        }
 
-        // Cho phép các phương thức HTTP
         httpResponse.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-
-        // Cho phép các header
         httpResponse.setHeader("Access-Control-Allow-Headers",
                 "Origin, X-Requested-With, Content-Type, Accept, Authorization");
-
-        // Cho phép gửi credentials (cookies, authorization headers)
         httpResponse.setHeader("Access-Control-Allow-Credentials", "true");
 
-        // Xử lý preflight request (OPTIONS)
         if ("OPTIONS".equalsIgnoreCase(httpRequest.getMethod())) {
             httpResponse.setStatus(HttpServletResponse.SC_OK);
             return;
         }
 
-        // Tiếp tục với request chain
         chain.doFilter(request, response);
     }
 

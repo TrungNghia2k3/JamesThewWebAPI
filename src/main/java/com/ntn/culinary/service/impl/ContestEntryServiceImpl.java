@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 
 import static com.ntn.culinary.constant.Cloudinary.CLOUDINARY_URL;
 import static com.ntn.culinary.utils.ImageUtils.*;
+import static com.ntn.culinary.utils.StringUtils.slugify;
 
 public class ContestEntryServiceImpl implements ContestEntryService {
     private final ContestEntryDao contestEntryDao;
