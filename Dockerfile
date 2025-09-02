@@ -31,8 +31,15 @@ ENV SECRET_KEY=""
 # Naming it ROOT.war makes the application accessible at the root context path (e.g., your-domain.com:8080/)
 COPY --from=build /app/target/JamesThewWebAPI.war /usr/local/tomcat/webapps/ROOT.war
 
-# Expose port 8080, which is the default port Tomcat listens on
+# Create a startup script that configures Tomcat port dynamically
+RUN echo '#!/bin/bash\n\
+export CATALINA_PORT=${PORT:-8080}\n\
+sed -i "s/port=\"8080\"/port=\"$CATALINA_PORT\"/g" /usr/local/tomcat/conf/server.xml\n\
+exec catalina.sh run' > /usr/local/tomcat/bin/start.sh && \
+chmod +x /usr/local/tomcat/bin/start.sh
+
+# Expose port (Render will set PORT environment variable)
 EXPOSE 8080
 
-# Command to start Tomcat when the container launches
-CMD ["catalina.sh", "run"]
+# Command to start Tomcat with dynamic port configuration
+CMD ["/usr/local/tomcat/bin/start.sh"]
