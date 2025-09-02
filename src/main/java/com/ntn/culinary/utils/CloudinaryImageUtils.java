@@ -17,7 +17,17 @@ import static com.ntn.culinary.utils.StringUtils.slugify;
 public class CloudinaryImageUtils {
 
     // Không còn cần IMAGE_DIRECTORY cục bộ nữa!
-    private static final Cloudinary cloudinary = CloudinaryConfig.getCloudinary(); // Lấy Cloudinary client
+    private static Cloudinary cloudinary; // Lazy initialization thay vì static final
+
+    /**
+     * Lấy Cloudinary instance (lazy initialization)
+     */
+    private static synchronized Cloudinary getCloudinary() {
+        if (cloudinary == null) {
+            cloudinary = CloudinaryConfig.getCloudinary();
+        }
+        return cloudinary;
+    }
 
     /**
      * Upload ảnh lên Cloudinary.
@@ -65,7 +75,7 @@ public class CloudinaryImageUtils {
                 // Copy InputStream vào file tạm với REPLACE_EXISTING để tránh FileAlreadyExistsException
                 Files.copy(inputStream, tempFile.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
 
-                Map uploadResult = cloudinary.uploader().upload(tempFile,
+                Map uploadResult = getCloudinary().uploader().upload(tempFile,
                         ObjectUtils.asMap(
                                 "public_id", publicId,
                                 "overwrite", true, // Ghi đè nếu public_id đã tồn tại
@@ -106,7 +116,7 @@ public class CloudinaryImageUtils {
         String publicId = type + "/" + filename; // publicId trên Cloudinary (vd: "recipes/apple-frangipan-1689012345678")
 
         try {
-            Map deleteResult = cloudinary.uploader().destroy(publicId, ObjectUtils.emptyMap());
+            Map deleteResult = getCloudinary().uploader().destroy(publicId, ObjectUtils.emptyMap());
             String result = (String) deleteResult.get("result");
             if ("ok".equals(result)) {
                 System.out.println("Deleted from Cloudinary: " + publicId);

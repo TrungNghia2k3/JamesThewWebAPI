@@ -20,7 +20,17 @@ public class CloudinaryImageUploader {
     private static final String START_FOLDER = "instructions";
     private static boolean foundStartFile = false; // Biến cờ để biết đã tìm thấy file bắt đầu chưa
 
-    private static final Cloudinary cloudinary = CloudinaryConfig.getCloudinary();
+    private static Cloudinary cloudinary; // Lazy initialization
+
+    /**
+     * Lấy Cloudinary instance (lazy initialization)
+     */
+    private static synchronized Cloudinary getCloudinary() {
+        if (cloudinary == null) {
+            cloudinary = CloudinaryConfig.getCloudinary();
+        }
+        return cloudinary;
+    }
 
     public static void main(String[] args) {
         // Lấy thông tin cấu hình từ biến môi trường

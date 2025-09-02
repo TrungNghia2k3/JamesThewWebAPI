@@ -180,6 +180,30 @@ The application is containerized for easy deployment with:
 - Production-ready Tomcat configuration
 - Environment variable support for configuration
 
+### Production Deployment (Render/Railway/etc.)
+
+**Required Environment Variables:**
+```bash
+CLOUDINARY_CLOUD_NAME=your_cloud_name
+CLOUDINARY_API_KEY=your_api_key
+CLOUDINARY_API_SECRET=your_api_secret
+DB_URL=jdbc:mysql://host:port/database?useSSL=true
+DB_USERNAME=your_db_user
+DB_PASSWORD=your_db_password
+SECRET_KEY=your_jwt_secret_key
+```
+
+**Docker Build Command:**
+```bash
+docker build -t jamesthew-api .
+docker run -p 8080:8080 \
+  -e CLOUDINARY_CLOUD_NAME=your_value \
+  -e CLOUDINARY_API_KEY=your_value \
+  -e CLOUDINARY_API_SECRET=your_value \
+  -e DB_URL=your_db_url \
+  jamesthew-api
+```
+
 ---
 
 ## 🎯 Key Features in Detail

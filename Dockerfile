@@ -18,6 +18,15 @@ FROM tomcat:9.0.106-jdk17-temurin
 # Remove default web applications that come with Tomcat
 RUN rm -rf /usr/local/tomcat/webapps/*
 
+# Set environment variables for runtime (these should be overridden in production)
+ENV CLOUDINARY_CLOUD_NAME=""
+ENV CLOUDINARY_API_KEY=""
+ENV CLOUDINARY_API_SECRET=""
+ENV DB_URL=""
+ENV DB_USERNAME=""
+ENV DB_PASSWORD=""
+ENV SECRET_KEY=""
+
 # Copy the WAR file from the 'build' stage and rename it to ROOT.war
 # Naming it ROOT.war makes the application accessible at the root context path (e.g., your-domain.com:8080/)
 COPY --from=build /app/target/JamesThewWebAPI.war /usr/local/tomcat/webapps/ROOT.war
