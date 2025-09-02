@@ -5,8 +5,10 @@ import com.ntn.culinary.dao.impl.UserDaoImpl;
 import com.ntn.culinary.exception.ForbiddenException;
 import com.ntn.culinary.exception.UnauthorizedException;
 import com.ntn.culinary.response.ApiResponse;
+import com.ntn.culinary.service.ImageService;
 import com.ntn.culinary.service.JwtService;
 import com.ntn.culinary.service.UserService;
+import com.ntn.culinary.service.impl.ImageServiceImpl;
 import com.ntn.culinary.service.impl.JwtServiceImpl;
 import com.ntn.culinary.service.impl.UserServiceImpl;
 import com.ntn.culinary.utils.ResponseUtils;
@@ -37,8 +39,9 @@ public class JwtFilter implements Filter {
 
     public JwtFilter() {
         UserDao userDao = new UserDaoImpl();
+        ImageService imageService = new ImageServiceImpl(); // Assuming you have an ImageService implementation
         this.jwtService = new JwtServiceImpl();
-        this.userService = new UserServiceImpl(userDao);
+        this.userService = new UserServiceImpl(userDao, imageService);
     }
 
     @Override
@@ -129,8 +132,8 @@ public class JwtFilter implements Filter {
     private static final Map<String, String> PERMISSION_MAP = Map.of(
             "/api/protected/staff/contests", "MANAGE_CONTESTS",
             "/api/protected/staff/users", "MANAGE_USERS",
-            "/api/protected/staff/contest-entries","MANAGE_CONTEST_ENTRIES",
+            "/api/protected/staff/contest-entries", "MANAGE_CONTEST_ENTRIES",
             "/api/protected/staff/score-contest-entry-examiners", "MANAGE_SCORE_CONTEST_ENTRIES",
-            "/api/protected/staff/comments","MANAGE_COMMENTS"
+            "/api/protected/staff/comments", "MANAGE_COMMENTS"
     );
 }

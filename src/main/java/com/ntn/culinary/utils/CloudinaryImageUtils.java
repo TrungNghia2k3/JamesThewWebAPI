@@ -53,14 +53,17 @@ public class CloudinaryImageUtils {
                 }
 
                 String uniqueBaseName = (baseFileName != null && !baseFileName.isEmpty())
-                        ? slugify(baseFileName) + "-" + System.currentTimeMillis()
+                        ? slugify(baseFileName) + "-" + System.currentTimeMillis() + "-" + UUID.randomUUID().toString().substring(0, 8)
                         : UUID.randomUUID().toString(); // Fallback nếu baseFileName trống
 
                 // Tạo publicId dạng: "type/unique-base-name"
                 publicId = type + "/" + uniqueBaseName;
 
-                tempFile = File.createTempFile("upload-", ext);
-                Files.copy(inputStream, tempFile.toPath()); // Copy InputStream vào file tạm
+                // Tạo file tạm thời với tên duy nhất để tránh collision
+                tempFile = File.createTempFile("upload-" + UUID.randomUUID().toString().substring(0, 8) + "-", ext);
+
+                // Copy InputStream vào file tạm với REPLACE_EXISTING để tránh FileAlreadyExistsException
+                Files.copy(inputStream, tempFile.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
 
                 Map uploadResult = cloudinary.uploader().upload(tempFile,
                         ObjectUtils.asMap(
@@ -92,29 +95,27 @@ public class CloudinaryImageUtils {
     }
 
     /**
-     * Xóa ảnh từ Cloudinary.
+     * Xóa ảnh đã upload từ Cloudinary.
      *
-     * @param publicId Public ID của ảnh cần xóa trên Cloudinary (vd: "recipes/my-recipe-image-123")
-     * @return true nếu xóa thành công, false nếu có lỗi.
+     * @param filename Tên file cần xóa (vd: "apple-frangipan-1689012345678.jpg").
+     *                 Thực tế là public_id trên Cloudinary.
+     * @param type     Thư mục ảo trên Cloudinary (vd: "recipes", "avatars", "categories").
      */
-    public static boolean deleteImage(String publicId) {
-        if (publicId == null || publicId.isEmpty()) {
-            return false;
-        }
+    public static void deleteImage(String filename, String type) {
+
+        String publicId = type + "/" + filename; // publicId trên Cloudinary (vd: "recipes/apple-frangipan-1689012345678")
 
         try {
             Map deleteResult = cloudinary.uploader().destroy(publicId, ObjectUtils.emptyMap());
             String result = (String) deleteResult.get("result");
             if ("ok".equals(result)) {
                 System.out.println("Deleted from Cloudinary: " + publicId);
-                return true;
             } else {
                 System.err.println("Cloudinary delete failed for " + publicId + ": " + deleteResult);
-                return false;
+
             }
         } catch (IOException e) {
             System.err.println("Error deleting image from Cloudinary " + publicId + ": " + e.getMessage());
-            return false;
         }
     }
 }

@@ -43,7 +43,7 @@ public class ContestEntryDaoImpl implements ContestEntryDao {
 
             stmt.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException("Error adding contest entry", e);
+            throw new RuntimeException("Database: Error adding contest entry", e);
         }
     }
 
@@ -343,6 +343,47 @@ public class ContestEntryDaoImpl implements ContestEntryDao {
             }
         } catch (SQLException e) {
             throw new RuntimeException("Error retrieving contest entry by user ID and contest ID", e);
+        }
+    }
+
+    @Override
+    public boolean existsByNameAndContestId(String name, int contestId) {
+        String EXISTS_BY_NAME_AND_CONTEST_ID_QUERY = """
+                SELECT 1 FROM contest_entry WHERE name = ? AND contest_id = ? LIMIT 1
+                """;
+
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(EXISTS_BY_NAME_AND_CONTEST_ID_QUERY)) {
+
+            stmt.setString(1, name);
+            stmt.setInt(2, contestId);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                return rs.next();
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error checking existence of contest entry by name and contest ID", e);
+        }
+    }
+
+    @Override
+    public boolean existsContestEntryWithNameExcludingId(String name, int contestId, int contestEntryId) {
+        String EXISTS_CONTEST_ENTRY_WITH_NAME_EXCLUDING_ID_QUERY = """
+                SELECT 1 FROM contest_entry WHERE name = ? AND contest_id = ? AND id != ? LIMIT 1
+                """;
+
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(EXISTS_CONTEST_ENTRY_WITH_NAME_EXCLUDING_ID_QUERY)) {
+
+            stmt.setString(1, name);
+            stmt.setInt(2, contestId);
+            stmt.setInt(3, contestEntryId);
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                return rs.next();
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error checking existence of contest entry with name excluding ID", e);
         }
     }
 

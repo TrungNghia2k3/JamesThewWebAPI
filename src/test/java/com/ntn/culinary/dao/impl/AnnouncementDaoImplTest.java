@@ -1,6 +1,6 @@
-package com.ntn.culinary.dao;
+package com.ntn.culinary.dao.impl;
 
-import com.ntn.culinary.dao.impl.AnnouncementDaoImpl;
+import com.ntn.culinary.dao.AnnouncementDao;
 import com.ntn.culinary.model.Announcement;
 import com.ntn.culinary.utils.DatabaseUtils;
 import org.junit.jupiter.api.AfterEach;
@@ -14,7 +14,7 @@ import java.util.List;
 import static com.ntn.culinary.utils.DatabaseUtils.getConnection;
 import static org.junit.jupiter.api.Assertions.*;
 
-class AnnouncementDaoTest {
+class AnnouncementDaoImplTest {
     private AnnouncementDao announcementDao;
 
     @BeforeAll
@@ -27,11 +27,11 @@ class AnnouncementDaoTest {
              Statement stmt = conn.createStatement()) {
             stmt.execute("""
                         CREATE TABLE announcements (
-                            id INT AUTO_INCREMENT PRIMARY KEY,
-                            title VARCHAR(255),
-                            description TEXT,
-                            announcement_date DATE,
-                            contest_id INT
+                            id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+                            title VARCHAR(255) NOT NULL,
+                            description TEXT NOT NULL,
+                            announcement_date DATE NOT NULL,
+                            contest_id INT NOT NULL
                         )
                     """);
         }
@@ -65,10 +65,10 @@ class AnnouncementDaoTest {
         announcementDao.insertAnnouncement(ann);
 
         // Assert
-        // Kiểm tra có lưu thành công không
+        String query = "SELECT * FROM announcements WHERE title = ?";
+
         try (Connection conn = getConnection();
-             PreparedStatement stmt = conn.prepareStatement(
-                     "SELECT COUNT(*) FROM announcements WHERE title = ?")) {
+             PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, "Test Announcement");
             ResultSet rs = stmt.executeQuery();
             rs.next();
@@ -77,6 +77,50 @@ class AnnouncementDaoTest {
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
+    }
+
+    @Test
+    void testInsertAnnouncement_Failure() {
+        // Arrange
+        Announcement ann = new Announcement();
+        ann.setTitle(null); // Invalid title
+        ann.setAnnouncementDate(java.sql.Date.valueOf("2025-07-06"));
+        ann.setDescription("Test Description");
+        ann.setContestId(1);
+
+        // Act & Assert
+        assertThrows(RuntimeException.class, () -> announcementDao.insertAnnouncement(ann));
+    }
+
+    @Test
+    void testExistsAnnouncementWithContest_Success() {
+        // Arrange
+        try (Connection conn = DatabaseUtils.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(
+                     "INSERT INTO announcements (title, announcement_date, description, contest_id) VALUES (?, ?, ?, ?)")) {
+            stmt.setString(1, "Test Announcement");
+            stmt.setDate(2, Date.valueOf("2025-07-06"));
+            stmt.setString(3, "Test Description");
+            stmt.setInt(4, 1);
+            stmt.executeUpdate();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+        // Act
+        boolean exists = announcementDao.existsAnnouncementWithContest(1);
+
+        // Assert
+        assertTrue(exists);
+    }
+
+    @Test
+    void testExistsAnnouncementWithContest_Failure() {
+        // Act
+        boolean exists = announcementDao.existsAnnouncementWithContest(999); // Non-existent contest ID
+
+        // Assert
+        assertFalse(exists);
     }
 
     @Test
@@ -117,5 +161,14 @@ class AnnouncementDaoTest {
         assertEquals(Date.valueOf("2023-02-02"), a2.getAnnouncementDate());
         assertEquals("Description 2", a2.getDescription());
         assertEquals(20, a2.getContestId());
+    }
+
+    @Test
+    void testGetAllAnnouncements_Empty() {
+        // Act
+        List<Announcement> result = announcementDao.getAllAnnouncements();
+
+        // Assert
+        assertTrue(result.isEmpty());
     }
 }

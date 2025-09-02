@@ -3,7 +3,6 @@ package com.ntn.culinary.servlet;
 import com.ntn.culinary.dao.AreaDao;
 import com.ntn.culinary.dao.impl.AreaDaoImpl;
 import com.ntn.culinary.exception.NotFoundException;
-import com.ntn.culinary.response.ApiResponse;
 import com.ntn.culinary.response.AreaResponse;
 import com.ntn.culinary.service.AreaService;
 import com.ntn.culinary.service.impl.AreaServiceImpl;

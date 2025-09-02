@@ -9,8 +9,8 @@ import com.ntn.culinary.model.Nutrition;
 import com.ntn.culinary.model.Recipe;
 import com.ntn.culinary.request.RecipeRequest;
 import com.ntn.culinary.response.RecipeResponse;
+import com.ntn.culinary.service.ImageService;
 import com.ntn.culinary.service.RecipeService;
-import com.ntn.culinary.utils.ImageUtils;
 
 import javax.servlet.http.Part;
 import java.sql.Date;
@@ -25,8 +25,6 @@ import static com.ntn.culinary.utils.StringUtils.slugify;
 
 public class RecipeServiceImpl implements RecipeService {
 
-    private final String baseUrl = "http://localhost:8080/JamesThewWebApplication";
-
     private final RecipeDao recipeDao;
     private final CategoryDao categoryDao;
     private final AreaDao areaDao;
@@ -34,8 +32,9 @@ public class RecipeServiceImpl implements RecipeService {
     private final DetailedInstructionsDao detailedInstructionsDao;
     private final CommentDao commentDao;
     private final NutritionDao nutritionDao;
+    private final ImageService imageService;
 
-    public RecipeServiceImpl(RecipeDao recipeDao, CategoryDao categoryDao, AreaDao areaDao, UserDao userDao, DetailedInstructionsDao detailedInstructionsDao, CommentDao commentDao, NutritionDao nutritionDao) {
+    public RecipeServiceImpl(RecipeDao recipeDao, CategoryDao categoryDao, AreaDao areaDao, UserDao userDao, DetailedInstructionsDao detailedInstructionsDao, CommentDao commentDao, NutritionDao nutritionDao, ImageService imageService) {
         this.recipeDao = recipeDao;
         this.categoryDao = categoryDao;
         this.areaDao = areaDao;
@@ -43,6 +42,7 @@ public class RecipeServiceImpl implements RecipeService {
         this.detailedInstructionsDao = detailedInstructionsDao;
         this.commentDao = commentDao;
         this.nutritionDao = nutritionDao;
+        this.imageService = imageService;
     }
 
     @Override
@@ -51,7 +51,7 @@ public class RecipeServiceImpl implements RecipeService {
 
         if (imagePart != null && imagePart.getSize() > 0) {
             String slug = slugify(recipeRequest.getName());
-            String fileName = ImageUtils.saveImage(imagePart, slug, "recipes");
+            String fileName = imageService.uploadImage(imagePart, slug, "recipes");
             recipeRequest.setImage(fileName);
         }
 
@@ -70,10 +70,10 @@ public class RecipeServiceImpl implements RecipeService {
         if (imagePart != null && imagePart.getSize() > 0) {
             // Delete old image if it exists
             if (existingRecipe.getImage() != null) {
-                ImageUtils.deleteImage(existingRecipe.getImage(), "recipes");
+                imageService.deleteImage(existingRecipe.getImage(), "recipes");
             }
             String slug = slugify(recipeRequest.getName());
-            String fileName = ImageUtils.saveImage(imagePart, slug, "recipes");
+            String fileName = imageService.uploadImage(imagePart, slug, "recipes");
             recipeRequest.setImage(fileName);
         } else {
             recipeRequest.setImage(existingRecipe.getImage());
@@ -91,7 +91,7 @@ public class RecipeServiceImpl implements RecipeService {
 
         // Delete image if it exists
         if (existingRecipe.getImage() != null) {
-            ImageUtils.deleteImage(existingRecipe.getImage(), "recipes");
+            imageService.deleteImage(existingRecipe.getImage(), "recipes");
         }
 
         recipeDao.deleteRecipe(id);
@@ -144,10 +144,14 @@ public class RecipeServiceImpl implements RecipeService {
 
         if (category != null && !category.isBlank()) {
             category = capitalize(category);
+        } else if (category != null && category.isBlank()) {
+            category = null; // Convert blank strings to null
         }
 
         if (area != null && !area.isBlank()) {
             area = capitalize(area);
+        } else if (area != null && area.isBlank()) {
+            area = null; // Convert blank strings to null
         }
 
         List<Recipe> recipes = recipeDao.searchAndFilterFreeRecipes(keyword, category, area, createdBy, accessType, page, size);
@@ -166,12 +170,16 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public List<RecipeResponse> searchAndFilterRecipes(String keyword, String category, String area, int recipedBy, int page, int size) {
 
-        if (category != null) {
+        if (category != null && !category.isBlank()) {
             category = capitalize(category);
+        } else if (category != null && category.isBlank()) {
+            category = null; // Convert blank strings to null
         }
 
-        if (area != null) {
+        if (area != null && !area.isBlank()) {
             area = capitalize(area);
+        } else if (area != null && area.isBlank()) {
+            area = null; // Convert blank strings to null
         }
 
         return recipeDao.searchAndFilterRecipes(keyword, category, area, recipedBy, page, size).stream()
@@ -217,26 +225,37 @@ public class RecipeServiceImpl implements RecipeService {
     @Override
     public int countSearchAndFilterFreeRecipes(String keyword, String category, String area, int recipedBy, String accessType) {
 
-        if (category != null) {
+        if (category != null && !category.isBlank()) {
             category = capitalize(category);
+        } else if (category != null && category.isBlank()) {
+            category = null; // Convert blank strings to null
         }
 
-        if (area != null) {
+        if (area != null && !area.isBlank()) {
             area = capitalize(area);
+        } else if (area != null && area.isBlank()) {
+            area = null; // Convert blank strings to null
         }
 
-        return recipeDao.countSearchAndFilterFreeRecipes(keyword, category, area, recipedBy, accessType.toUpperCase());
+        // Handle accessType null safety
+        String normalizedAccessType = accessType != null ? accessType.toUpperCase() : null;
+
+        return recipeDao.countSearchAndFilterFreeRecipes(keyword, category, area, recipedBy, normalizedAccessType);
     }
 
     @Override
     public int countSearchAndFilterRecipes(String keyword, String category, String area, int recipedBy) {
 
-        if (category != null) {
+        if (category != null && !category.isBlank()) {
             category = capitalize(category);
+        } else if (category != null && category.isBlank()) {
+            category = null; // Convert blank strings to null
         }
 
-        if (area != null) {
+        if (area != null && !area.isBlank()) {
             area = capitalize(area);
+        } else if (area != null && area.isBlank()) {
+            area = null; // Convert blank strings to null
         }
 
         return recipeDao.countSearchAndFilterRecipes(keyword, category, area, recipedBy);
@@ -313,9 +332,9 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     private RecipeResponse mapRecipeToResponse(Recipe recipe) {
-        String imageUrl = "http://localhost:8080/JamesThewWebApplication/api/images/recipes/" + recipe.getImage();
+        String imageUrl = CLOUDINARY_URL + "recipes/" + recipe.getImage();
 
-        String detailedInstructionImageUrl = "http://localhost:8080/JamesThewWebApplication/api/images/instructions/";
+        String detailedInstructionImageUrl = CLOUDINARY_URL + "instructions/";
 
         // Add image URL to each detailed instruction
         List<DetailedInstructions> updatedDetailedInstructions = Optional
@@ -386,6 +405,4 @@ public class RecipeServiceImpl implements RecipeService {
                 instructions
         );
     }
-
-
 }

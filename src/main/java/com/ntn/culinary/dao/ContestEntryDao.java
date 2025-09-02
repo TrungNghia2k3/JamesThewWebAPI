@@ -30,4 +30,8 @@ public interface ContestEntryDao {
     List<ContestEntry> getContestEntriesByUserId(int userId);
 
     ContestEntry getContestEntryByUserIdAndContestId(int userId, int contestId);
+
+    boolean existsByNameAndContestId(String name, int contestId);
+
+    boolean existsContestEntryWithNameExcludingId(String name, int contestId, int contestEntryId);
 }

@@ -8,7 +8,9 @@ import com.ntn.culinary.exception.ValidationException;
 import com.ntn.culinary.request.RecipeRequest;
 import com.ntn.culinary.response.RecipePageResponse;
 import com.ntn.culinary.response.RecipeResponse;
+import com.ntn.culinary.service.ImageService;
 import com.ntn.culinary.service.RecipeService;
+import com.ntn.culinary.service.impl.ImageServiceImpl;
 import com.ntn.culinary.service.impl.RecipeServiceImpl;
 import com.ntn.culinary.validator.RecipeRequestValidator;
 import org.apache.commons.fileupload.FileItem;
@@ -42,7 +44,8 @@ public class RecipeServlet extends HttpServlet {
         DetailedInstructionsDao detailedInstructionsDao = new DetailedInstructionsDaoImpl();
         CommentDao commentDao = new CommentDaoImpl();
         NutritionDao nutritionDao = new NutritionDaoImpl();
-        this.recipeService = new RecipeServiceImpl(recipeDao, categoryDao, areaDao, userDao, detailedInstructionsDao, commentDao, nutritionDao);
+        ImageService imageService = new ImageServiceImpl();
+        this.recipeService = new RecipeServiceImpl(recipeDao, categoryDao, areaDao, userDao, detailedInstructionsDao, commentDao, nutritionDao, imageService);
     }
 
     @Override
@@ -82,7 +85,7 @@ public class RecipeServlet extends HttpServlet {
                 int totalItems = recipeService.countAllRecipesByCategory(categoryParam);
                 int totalPages = (int) Math.ceil((double) totalItems / size);
                 RecipePageResponse response = new RecipePageResponse(recipes, totalItems, page, totalPages);
-                sendResponse(resp,success(200, "Recipes by category fetched successfully", response));
+                sendResponse(resp, success(200, "Recipes by category fetched successfully", response));
             } else if (userIdParam != null) {
                 // Fetch recipes by user with pagination
                 int userId = Integer.parseInt(userIdParam);
@@ -193,7 +196,7 @@ public class RecipeServlet extends HttpServlet {
             }
 
             recipeService.addRecipe(recipeRequest, imagePart);
-            sendResponse(resp, success(200, "Recipe added successfully"));
+            sendResponse(resp, success(201, "Recipe added successfully"));
         } catch (JsonSyntaxException e) {
             sendResponse(resp, error(400, "Invalid JSON data"));
         } catch (IOException e) {

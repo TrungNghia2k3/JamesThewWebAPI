@@ -29,7 +29,7 @@ public class AnnouncementDaoImpl implements AnnouncementDao {
 
             stmt.executeUpdate();
         } catch (SQLException e) {
-            throw new RuntimeException("Error inserting announcement: " + e.getMessage(), e);
+            throw new RuntimeException("Error inserting announcement: " + e.getMessage());
         }
     }
 

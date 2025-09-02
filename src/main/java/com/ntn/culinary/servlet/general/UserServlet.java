@@ -5,7 +5,10 @@ import com.ntn.culinary.dao.impl.UserDaoImpl;
 import com.ntn.culinary.exception.ValidationException;
 import com.ntn.culinary.request.UserRequest;
 import com.ntn.culinary.response.ApiResponse;
+import com.ntn.culinary.response.UserResponse;
+import com.ntn.culinary.service.ImageService;
 import com.ntn.culinary.service.UserService;
+import com.ntn.culinary.service.impl.ImageServiceImpl;
 import com.ntn.culinary.service.impl.UserServiceImpl;
 import com.ntn.culinary.validator.UpdateUserRequestValidator;
 
@@ -15,6 +18,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
+import java.util.List;
 import java.util.Map;
 
 import static com.ntn.culinary.response.ApiResponse.*;
@@ -27,7 +31,23 @@ public class UserServlet extends HttpServlet {
 
     public UserServlet() {
         UserDao userDao = new UserDaoImpl();
-        this.userService = new UserServiceImpl(userDao);
+        ImageService imageService = new ImageServiceImpl(); // Assuming you have an ImageService implementation
+        this.userService = new UserServiceImpl(userDao, imageService);
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) {
+        try {
+            String idParam = req.getParameter("id");
+
+            if (idParam != null) {
+                int id = Integer.parseInt(idParam);
+                UserResponse user = userService.getUserById(id);
+                sendResponse(resp, success(200, "User found", user));
+            }
+        } catch (Exception e) {
+            sendResponse(resp, error(500, "Server error: " + e.getMessage()));
+        }
     }
 
     @Override

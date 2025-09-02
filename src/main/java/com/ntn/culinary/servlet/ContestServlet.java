@@ -8,7 +8,9 @@ import com.ntn.culinary.exception.NotFoundException;
 import com.ntn.culinary.response.ApiResponse;
 import com.ntn.culinary.response.ContestResponse;
 import com.ntn.culinary.service.ContestService;
+import com.ntn.culinary.service.ImageService;
 import com.ntn.culinary.service.impl.ContestServiceImpl;
+import com.ntn.culinary.service.impl.ImageServiceImpl;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -29,7 +31,8 @@ public class ContestServlet extends HttpServlet {
     public ContestServlet() {
         ContestDao contestDao = new ContestDaoImpl();
         ContestImagesDao contestImagesDao = new ContestImagesDaoImpl();
-        this.contestService = new ContestServiceImpl(contestDao, contestImagesDao);
+        ImageService imageService = new ImageServiceImpl();
+        this.contestService = new ContestServiceImpl(contestDao, contestImagesDao, imageService);
     }
 
     @Override

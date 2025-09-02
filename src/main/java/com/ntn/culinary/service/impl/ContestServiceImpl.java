@@ -9,21 +9,23 @@ import com.ntn.culinary.model.ContestImages;
 import com.ntn.culinary.request.ContestRequest;
 import com.ntn.culinary.response.ContestResponse;
 import com.ntn.culinary.service.ContestService;
+import com.ntn.culinary.service.ImageService;
 
 import java.sql.Date;
 import java.util.List;
 
 import static com.ntn.culinary.constant.Cloudinary.CLOUDINARY_URL;
-import static com.ntn.culinary.utils.ImageUtils.*;
 import static com.ntn.culinary.utils.StringUtils.slugify;
 
 public class ContestServiceImpl implements ContestService {
     private final ContestDao contestDao;
     private final ContestImagesDao contestImagesDao;
+    private final ImageService imageService;
 
-    public ContestServiceImpl(ContestDao contestDao, ContestImagesDao contestImagesDao) {
+    public ContestServiceImpl(ContestDao contestDao, ContestImagesDao contestImagesDao, ImageService imageService) {
         this.contestDao = contestDao;
         this.contestImagesDao = contestImagesDao;
+        this.imageService = imageService;
     }
 
     @Override
@@ -90,7 +92,7 @@ public class ContestServiceImpl implements ContestService {
         images.forEach(image -> {
             if (image.getImagePath() != null) {
                 contestImagesDao.deleteContestImageById(image.getId());
-                deleteImage(image.getImagePath(), "contests");
+                imageService.deleteImage(image.getImagePath(), "contests");
             }
         });
 
@@ -135,7 +137,7 @@ public class ContestServiceImpl implements ContestService {
             List<ContestImages> existingImages = contestImagesDao.getContestImagesByContestId(contestId);
             for (ContestImages image : existingImages) {
                 if (image.getImagePath() != null) {
-                    deleteImage(image.getImagePath(), "contests");
+                    imageService.deleteImage(image.getImagePath(), "contests");
                 }
                 contestImagesDao.deleteContestImageById(image.getId());
             }
@@ -145,7 +147,7 @@ public class ContestServiceImpl implements ContestService {
         for (var imageRequest : imageRequests) {
             String fileName = null;
             if (imageRequest.getImage() != null && imageRequest.getImage().getSize() > 0) {
-                fileName = saveImage(imageRequest.getImage(), slug, "contests");
+                fileName = imageService.uploadImage(imageRequest.getImage(), slug, "contests");
             }
             contestImagesDao.addContestImage(new ContestImages(contestId, fileName));
         }

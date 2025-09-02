@@ -1,6 +1,6 @@
-package com.ntn.culinary.dao;
+package com.ntn.culinary.dao.impl;
 
-import com.ntn.culinary.dao.impl.UserDaoImpl;
+import com.ntn.culinary.dao.UserDao;
 import com.ntn.culinary.model.Permission;
 import com.ntn.culinary.model.Role;
 import com.ntn.culinary.model.User;
@@ -13,7 +13,7 @@ import java.util.List;
 import static com.ntn.culinary.utils.DatabaseUtils.getConnection;
 import static org.junit.jupiter.api.Assertions.*;
 
-class UserDaoTest {
+class UserDaoImplTest {
 
     private UserDao userDao;
 

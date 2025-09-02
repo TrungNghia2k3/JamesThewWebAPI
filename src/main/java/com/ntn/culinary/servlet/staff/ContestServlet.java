@@ -11,7 +11,9 @@ import com.ntn.culinary.exception.ValidationException;
 import com.ntn.culinary.request.ContestImagesRequest;
 import com.ntn.culinary.request.ContestRequest;
 import com.ntn.culinary.service.ContestService;
+import com.ntn.culinary.service.ImageService;
 import com.ntn.culinary.service.impl.ContestServiceImpl;
+import com.ntn.culinary.service.impl.ImageServiceImpl;
 import com.ntn.culinary.validator.ContestRequestValidator;
 
 import javax.servlet.ServletException;
@@ -37,7 +39,8 @@ public class ContestServlet extends HttpServlet {
     public ContestServlet() {
         ContestDao contestDao = new ContestDaoImpl();
         ContestImagesDao contestImagesDao = new ContestImagesDaoImpl();
-        this.contestService = new ContestServiceImpl(contestDao, contestImagesDao);
+        ImageService imageService = new ImageServiceImpl();
+        this.contestService = new ContestServiceImpl(contestDao, contestImagesDao, imageService);
     }
 
     @Override

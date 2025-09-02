@@ -5,7 +5,7 @@ import com.ntn.culinary.response.CategoryResponse;
 
 import java.util.List;
 
-public interface CategoryService {
+public interface  CategoryService {
     void addCategory(CategoryRequest categoryRequest);
 
     void updateCategory(CategoryRequest categoryRequest);

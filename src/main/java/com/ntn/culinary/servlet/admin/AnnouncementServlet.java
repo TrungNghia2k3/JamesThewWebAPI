@@ -93,7 +93,7 @@ public class AnnouncementServlet extends HttpServlet {
             }
 
             announcementService.addAnnouncement(announcementRequest);
-            sendResponse(resp, success(200, "Announcement created successfully"));
+            sendResponse(resp, success(201, "Announcement created successfully"));
         } catch (JsonSyntaxException e) {
             sendResponse(resp, error(400, "Invalid JSON data"));
         } catch (IOException e) {

@@ -7,7 +7,9 @@ import com.ntn.culinary.request.CategoryRequest;
 import com.ntn.culinary.response.ApiResponse;
 import com.ntn.culinary.response.CategoryResponse;
 import com.ntn.culinary.service.CategoryService;
+import com.ntn.culinary.service.ImageService;
 import com.ntn.culinary.service.impl.CategoryServiceImpl;
+import com.ntn.culinary.service.impl.ImageServiceImpl;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -29,7 +31,8 @@ public class CategoryServlet extends HttpServlet {
 
     public CategoryServlet() {
         CategoryDao categoryDao = new CategoryDaoImpl();
-        this.categoryService = new CategoryServiceImpl(categoryDao);
+        ImageService imageService = new ImageServiceImpl();
+        this.categoryService = new CategoryServiceImpl(categoryDao, imageService);
     }
 
     @Override
@@ -79,7 +82,7 @@ public class CategoryServlet extends HttpServlet {
             }
 
             categoryService.addCategory(categoryRequest);
-            sendResponse(resp, success(200, "Category created successfully"));
+            sendResponse(resp, success(201, "Category created successfully"));
         } catch (IllegalArgumentException e) {
             sendResponse(resp, error(400, e.getMessage()));
         } catch (IOException e) {

@@ -7,19 +7,21 @@ import com.ntn.culinary.model.Category;
 import com.ntn.culinary.request.CategoryRequest;
 import com.ntn.culinary.response.CategoryResponse;
 import com.ntn.culinary.service.CategoryService;
+import com.ntn.culinary.service.ImageService;
 
 import java.util.List;
 
 import static com.ntn.culinary.constant.Cloudinary.CLOUDINARY_URL;
-import static com.ntn.culinary.utils.ImageUtils.*;
 import static com.ntn.culinary.utils.StringUtils.slugify;
 import static java.util.stream.Collectors.toList;
 
 public class CategoryServiceImpl implements CategoryService {
     private final CategoryDao categoryDao;
+    private final ImageService imageService;
 
-    public CategoryServiceImpl(CategoryDao categoryDao) {
+    public CategoryServiceImpl(CategoryDao categoryDao, ImageService imageService) {
         this.categoryDao = categoryDao;
+        this.imageService = imageService;
     }
 
     @Override
@@ -33,8 +35,8 @@ public class CategoryServiceImpl implements CategoryService {
             // Tạo slug từ tên danh mục
             String slug = slugify(categoryRequest.getName());
 
-            // Lưu ảnh và lấy tên file
-            fileName = saveImage(categoryRequest.getImage(), slug, "categories");
+            // Lưu ảnh Cloudinary và lấy tên file
+            fileName = imageService.uploadImage(categoryRequest.getImage(), slug, "categories");
         }
 
         // Create new category object
@@ -57,16 +59,16 @@ public class CategoryServiceImpl implements CategoryService {
 
         String fileName = null;
         if (categoryRequest.getImage() != null && categoryRequest.getImage().getSize() > 0) {
-            // Xóa ảnh cũ nếu có
+            // Xóa ảnh cũ nếu có ở Cloudinary
             if (existingCategory.getPath() != null) {
-                deleteImage(existingCategory.getPath(), "categories");
+                imageService.deleteImage(existingCategory.getPath(), "categories");
             }
 
             // Tạo slug từ tên danh mục
             String slug = slugify(categoryRequest.getName());
 
-            // Lưu ảnh và lấy tên file
-            fileName = saveImage(categoryRequest.getImage(), slug, "categories");
+            // Lưu ảnh lên Cloudinary và lấy tên file
+            fileName = imageService.uploadImage(categoryRequest.getImage(), slug, "categories");
         }
 
         // Create updated category object
@@ -109,7 +111,7 @@ public class CategoryServiceImpl implements CategoryService {
 
         // Xóa ảnh nếu có
         if (category.getPath() != null) {
-            deleteImage(category.getPath(), "categories");
+            imageService.deleteImage(category.getPath(), "categories");
         }
 
         categoryDao.deleteCategoryById(id);
@@ -142,7 +144,7 @@ public class CategoryServiceImpl implements CategoryService {
         }
 
         // UPDATE
-        if (isUpdate && categoryDao.existsById(request.getId())) {
+        if (isUpdate && !categoryDao.existsById(request.getId())) {
             throw new NotFoundException("Category with id not found");
         }
 

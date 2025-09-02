@@ -101,7 +101,7 @@ public class ScoreContestEntryExaminersServlet extends HttpServlet {
             }
 
             contestEntryExaminersService.addExaminer(contestEntryExaminersRequest);
-            sendResponse(resp, success(200, "Contest entry examiners added successfully"));
+            sendResponse(resp, success(201, "Contest entry examiners added successfully"));
         } catch (JsonSyntaxException e) {
             sendResponse(resp, error(400, "Invalid JSON data"));
         } catch (IOException e) {

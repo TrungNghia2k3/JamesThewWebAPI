@@ -3,6 +3,7 @@ package com.ntn.culinary.fixture;
 import com.ntn.culinary.model.*;
 import com.ntn.culinary.request.AnnouncementRequest;
 import com.ntn.culinary.request.ContestEntryRequest;
+import com.ntn.culinary.response.RecipeResponse;
 
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -230,6 +231,24 @@ public class TestDataFactory {
         recipe.setShortDescription("Delicious beef noodle soup.");
         recipe.setAccessType("FREE");
         return List.of(recipe);
+    }
+
+    public static List<RecipeResponse> createRecipeResponseList() {
+        RecipeResponse response = new RecipeResponse();
+        response.setId(1);
+        response.setName("Pho Bo");
+        response.setCategory("Vietnamese");
+        response.setArea("Asia");
+        response.setInstructions("Cook it well.");
+        response.setImage("pho.jpg");
+        response.setIngredients("Beef, noodle");
+        response.setPublishedOn(Date.valueOf("2023-01-01"));
+        response.setRecipedBy(123);
+        response.setPrepareTime("10");
+        response.setCookingTime("30");
+        response.setYield("2");
+        response.setShortDescription("Delicious beef noodle soup.");
+        return List.of(response);
     }
 
     public static List<Comment> createCommentList() {

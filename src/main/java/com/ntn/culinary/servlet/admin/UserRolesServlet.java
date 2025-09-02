@@ -56,7 +56,7 @@ public class UserRolesServlet extends HttpServlet {
             }
 
             userRolesService.assignRoleToUser(userId, roleId);
-            sendResponse(resp, success(200, "Role assigned successfully"));
+            sendResponse(resp, success(201, "Role assigned successfully"));
         } catch (JsonSyntaxException e) {
             sendResponse(resp, error(400, "Invalid JSON data"));
         } catch (IOException e) {

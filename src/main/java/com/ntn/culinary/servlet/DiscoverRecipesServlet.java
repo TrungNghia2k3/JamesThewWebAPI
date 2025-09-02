@@ -4,7 +4,9 @@ import com.ntn.culinary.dao.*;
 import com.ntn.culinary.dao.impl.*;
 import com.ntn.culinary.response.RecipePageResponse;
 import com.ntn.culinary.response.RecipeResponse;
+import com.ntn.culinary.service.ImageService;
 import com.ntn.culinary.service.RecipeService;
+import com.ntn.culinary.service.impl.ImageServiceImpl;
 import com.ntn.culinary.service.impl.RecipeServiceImpl;
 
 import javax.servlet.annotation.WebServlet;
@@ -29,8 +31,9 @@ public class DiscoverRecipesServlet extends HttpServlet {
         DetailedInstructionsDao detailedInstructionsDao = new DetailedInstructionsDaoImpl();
         CommentDao commentDao = new CommentDaoImpl();
         NutritionDao nutritionDao = new NutritionDaoImpl();
+        ImageService imageService = new ImageServiceImpl();
 
-        this.recipeService = new RecipeServiceImpl(recipeDao, categoryDao, areaDao, userDao, detailedInstructionsDao, commentDao, nutritionDao);
+        this.recipeService = new RecipeServiceImpl(recipeDao, categoryDao, areaDao, userDao, detailedInstructionsDao, commentDao, nutritionDao, imageService);
     }
 
     // Thêm nhiều các bộ lọc và tìm kiếm cho các công thức nấu ăn

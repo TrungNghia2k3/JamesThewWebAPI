@@ -14,7 +14,9 @@ import com.ntn.culinary.request.ContestEntryRequest;
 import com.ntn.culinary.request.DeleteContestEntryRequest;
 import com.ntn.culinary.response.ContestEntryResponse;
 import com.ntn.culinary.service.ContestEntryService;
+import com.ntn.culinary.service.ImageService;
 import com.ntn.culinary.service.impl.ContestEntryServiceImpl;
+import com.ntn.culinary.service.impl.ImageServiceImpl;
 import com.ntn.culinary.utils.GsonUtils;
 import com.ntn.culinary.validator.ContestEntryRequestValidator;
 import com.ntn.culinary.validator.DeleteContestEntryRequestValidator;
@@ -52,8 +54,9 @@ public class ContestEntryServlet extends HttpServlet {
         CategoryDao categoryDao = new CategoryDaoImpl();
         AreaDao areaDao = new AreaDaoImpl();
         ContestDao contestDao = new ContestDaoImpl();
+        ImageService imageService = new ImageServiceImpl();
 
-        this.contestEntryService = new ContestEntryServiceImpl(contestEntryDao, contestEntryInstructionsDao, userDao, categoryDao, areaDao, contestDao);
+        this.contestEntryService = new ContestEntryServiceImpl(contestEntryDao, contestEntryInstructionsDao, userDao, categoryDao, areaDao, contestDao, imageService);
     }
 
     @Override
@@ -187,7 +190,7 @@ public class ContestEntryServlet extends HttpServlet {
             }
 
             contestEntryService.addContestEntry(contestEntryRequest, imagePart);
-            sendResponse(resp, success(200, "Contest entry created successfully", null));
+            sendResponse(resp, success(201, "Contest entry created successfully", null));
 
         } catch (BadRequestException e) {
             sendResponse(resp, error(400, e.getMessage()));

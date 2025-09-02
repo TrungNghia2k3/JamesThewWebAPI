@@ -41,14 +41,14 @@ public class AnnouncementServiceImpl implements AnnouncementService {
 
     @Override
     public AnnouncementResponse getAnnouncementById(int announcementId) {
+        // Fetch the announcement by contest ID
+        Announcement announcement = announcementDao.getAnnouncementById(announcementId);
 
-        // Check if the announcement exists
-        if (!announcementDao.existsAnnouncementById(announcementId)) {
+        // If the announcement does not exist, throw a NotFoundException
+        if (announcement == null) {
             throw new NotFoundException("Announcement with ID does not exist.");
         }
 
-        // Fetch the announcement by contest ID
-        Announcement announcement = announcementDao.getAnnouncementById(announcementId);
         return mapAnnouncementToResponse(announcement);
     }
 
@@ -161,14 +161,14 @@ public class AnnouncementServiceImpl implements AnnouncementService {
         response.setTitle(announcement.getTitle());
         response.setAnnouncementDate(announcement.getAnnouncementDate());
         response.setDescription(announcement.getDescription());
-        response.setContest(contestDao.getContestById(announcement.getContestId()));
+        response.setContest(contestDao.getContestById(announcement.getContestId())); // Get contest by ID
         response.setWinners(
-                announceWinnerDao.getAllWinnersByAnnouncementId(announcement.getId())
+                announceWinnerDao.getAllWinnersByAnnouncementId(announcement.getId())// Get winners from announceWinnerDao
                         .stream()
                         .map(winner ->
                                 new AnnounceWinnerResponse(
                                         winner.getId(),
-                                        contestEntryDao.getContestEntryById(winner.getContestEntryId()),
+                                        contestEntryDao.getContestEntryById(winner.getContestEntryId()), // Get contest entry by ID
                                         winner.getRanking()))
                         .toList()
         );

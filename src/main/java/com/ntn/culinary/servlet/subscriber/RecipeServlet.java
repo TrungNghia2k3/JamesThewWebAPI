@@ -8,7 +8,9 @@ import com.ntn.culinary.exception.ValidationException;
 import com.ntn.culinary.request.RecipeRequest;
 import com.ntn.culinary.response.RecipePageResponse;
 import com.ntn.culinary.response.RecipeResponse;
+import com.ntn.culinary.service.ImageService;
 import com.ntn.culinary.service.RecipeService;
+import com.ntn.culinary.service.impl.ImageServiceImpl;
 import com.ntn.culinary.service.impl.RecipeServiceImpl;
 import com.ntn.culinary.validator.RecipeRequestValidator;
 
@@ -39,7 +41,8 @@ public class RecipeServlet extends HttpServlet {
         DetailedInstructionsDao detailedInstructionsDao = new DetailedInstructionsDaoImpl();
         CommentDao commentDao = new CommentDaoImpl();
         NutritionDao nutritionDao = new NutritionDaoImpl();
-        this.recipeService = new RecipeServiceImpl(recipeDao, categoryDao, areaDao, userDao, detailedInstructionsDao, commentDao, nutritionDao);
+        ImageService imageService = new ImageServiceImpl();
+        this.recipeService = new RecipeServiceImpl(recipeDao, categoryDao, areaDao, userDao, detailedInstructionsDao, commentDao, nutritionDao, imageService);
     }
 
     @Override

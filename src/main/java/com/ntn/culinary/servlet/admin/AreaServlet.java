@@ -93,7 +93,7 @@ public class AreaServlet extends HttpServlet {
             }
 
             areaService.addArea(areaRequest);
-            sendResponse(resp, success(200, "Area added successfully"));
+            sendResponse(resp, success(201, "Area added successfully"));
         } catch (JsonSyntaxException e) {
             sendResponse(resp, error(400, "Invalid JSON data"));
         } catch (IllegalArgumentException e) {

@@ -6,7 +6,9 @@ import com.ntn.culinary.dao.impl.UserDaoImpl;
 import com.ntn.culinary.exception.ValidationException;
 import com.ntn.culinary.request.RegisterRequest;
 import com.ntn.culinary.response.ApiResponse;
+import com.ntn.culinary.service.ImageService;
 import com.ntn.culinary.service.UserService;
+import com.ntn.culinary.service.impl.ImageServiceImpl;
 import com.ntn.culinary.service.impl.UserServiceImpl;
 import com.ntn.culinary.validator.RegisterRequestValidator;
 
@@ -14,6 +16,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.awt.*;
 import java.io.IOException;
 import java.util.Map;
 
@@ -28,7 +31,8 @@ public class RegisterServlet extends HttpServlet {
 
     public RegisterServlet() {
         UserDao userDao = new UserDaoImpl();
-        this.userService = new UserServiceImpl(userDao);
+        ImageService imageService = new ImageServiceImpl();
+        this.userService = new UserServiceImpl(userDao, imageService);
     }
 
     @Override

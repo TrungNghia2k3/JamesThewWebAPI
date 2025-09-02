@@ -6,7 +6,9 @@ import com.ntn.culinary.exception.NotFoundException;
 import com.ntn.culinary.response.ApiResponse;
 import com.ntn.culinary.response.CategoryResponse;
 import com.ntn.culinary.service.CategoryService;
+import com.ntn.culinary.service.ImageService;
 import com.ntn.culinary.service.impl.CategoryServiceImpl;
+import com.ntn.culinary.service.impl.ImageServiceImpl;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -25,7 +27,8 @@ public class CategoryServlet extends HttpServlet {
 
     public CategoryServlet() {
         CategoryDao categoryDao = new CategoryDaoImpl();
-        this.categoryService = new CategoryServiceImpl(categoryDao);
+        ImageService imageService = new ImageServiceImpl();
+        this.categoryService = new CategoryServiceImpl(categoryDao, imageService);
     }
 
     @Override

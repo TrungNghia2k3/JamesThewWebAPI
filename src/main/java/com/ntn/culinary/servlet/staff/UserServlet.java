@@ -3,7 +3,9 @@ package com.ntn.culinary.servlet.staff;
 import com.ntn.culinary.dao.UserDao;
 import com.ntn.culinary.dao.impl.UserDaoImpl;
 import com.ntn.culinary.response.UserResponse;
+import com.ntn.culinary.service.ImageService;
 import com.ntn.culinary.service.UserService;
+import com.ntn.culinary.service.impl.ImageServiceImpl;
 import com.ntn.culinary.service.impl.UserServiceImpl;
 
 import javax.servlet.annotation.WebServlet;
@@ -23,7 +25,8 @@ public class UserServlet extends HttpServlet {
 
     public UserServlet() {
         UserDao userDao = new UserDaoImpl();
-        this.userService = new UserServiceImpl(userDao);
+        ImageService imageService = new ImageServiceImpl();
+        this.userService = new UserServiceImpl(userDao, imageService);
     }
 
     @Override

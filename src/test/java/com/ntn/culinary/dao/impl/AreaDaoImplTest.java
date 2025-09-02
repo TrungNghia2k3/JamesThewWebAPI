@@ -1,12 +1,11 @@
-package com.ntn.culinary.dao;
+package com.ntn.culinary.dao.impl;
 
+import com.ntn.culinary.dao.AreaDao;
 import org.junit.jupiter.api.Test;
 
 import java.sql.Connection;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-class AreaDaoTest {
+class AreaDaoImplTest {
     private Connection connection;
     private AreaDao areaDao;
 

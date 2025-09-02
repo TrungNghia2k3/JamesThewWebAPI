@@ -9,6 +9,7 @@ import com.ntn.culinary.request.ContestEntryRequest;
 import com.ntn.culinary.request.DeleteContestEntryRequest;
 import com.ntn.culinary.response.ContestEntryResponse;
 import com.ntn.culinary.service.ContestEntryService;
+import com.ntn.culinary.service.ImageService;
 
 import javax.servlet.http.Part;
 import java.sql.Date;
@@ -19,7 +20,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.ntn.culinary.constant.Cloudinary.CLOUDINARY_URL;
-import static com.ntn.culinary.utils.ImageUtils.*;
 import static com.ntn.culinary.utils.StringUtils.slugify;
 
 public class ContestEntryServiceImpl implements ContestEntryService {
@@ -29,28 +29,30 @@ public class ContestEntryServiceImpl implements ContestEntryService {
     private final CategoryDao categoryDao;
     private final AreaDao areaDao;
     private final ContestDao contestDao;
+    private final ImageService imageService;
 
-    public ContestEntryServiceImpl(ContestEntryDao contestEntryDao, ContestEntryInstructionsDao contestEntryInstructionsDao, UserDao userDao, CategoryDao categoryDao, AreaDao areaDao, ContestDao contestDao) {
+    public ContestEntryServiceImpl(ContestEntryDao contestEntryDao, ContestEntryInstructionsDao contestEntryInstructionsDao, UserDao userDao, CategoryDao categoryDao, AreaDao areaDao, ContestDao contestDao, ImageService imageService) {
         this.contestEntryDao = contestEntryDao;
         this.contestEntryInstructionsDao = contestEntryInstructionsDao;
         this.userDao = userDao;
         this.categoryDao = categoryDao;
         this.areaDao = areaDao;
         this.contestDao = contestDao;
+        this.imageService = imageService;
     }
 
     @Override
     public void addContestEntry(ContestEntryRequest contestEntryRequest, Part imagePart) {
 
         // Validate the contest entry request
-        validateContestEntryRequest(contestEntryRequest);
+        validateContestEntryRequest(contestEntryRequest, false);
 
         if (contestEntryDao.existsByUserIdAndContestIdAndName(contestEntryRequest.getUserId(), contestEntryRequest.getContestId(), contestEntryRequest.getName()))
             throw new ConflictException("Contest entry with the same name already exists for this user and contest.");
 
         if (imagePart != null && imagePart.getSize() > 0) {
             String slug = slugify(contestEntryRequest.getName());
-            String fileName = saveImage(imagePart, slug, "contest_entries");
+            String fileName = imageService.uploadImage(imagePart, slug, "contest_entries");
             contestEntryRequest.setImage(fileName);
         }
 
@@ -81,7 +83,7 @@ public class ContestEntryServiceImpl implements ContestEntryService {
     @Override
     public void updateContestEntry(ContestEntryRequest contestEntryRequest, Part imagePart) {
         // Validate request
-        validateContestEntryRequest(contestEntryRequest);
+        validateContestEntryRequest(contestEntryRequest, true);
 
         // Tìm contest entry hiện tại
         ContestEntry existing = contestEntryDao.getContestEntryByUserIdAndContestIdAndName(
@@ -98,10 +100,10 @@ public class ContestEntryServiceImpl implements ContestEntryService {
         String fileName = existing.getImage();
         if (imagePart != null && imagePart.getSize() > 0) {
             if (fileName != null) {
-                deleteImage(fileName, "contest_entries");
+                imageService.deleteImage(fileName, "contest_entries");
             }
             String slug = slugify(contestEntryRequest.getName());
-            fileName = saveImage(imagePart, slug, "contest_entries");
+            fileName = imageService.uploadImage(imagePart, slug, "contest_entries");
         }
 
         // Map thông tin từ request sang model
@@ -146,7 +148,6 @@ public class ContestEntryServiceImpl implements ContestEntryService {
 
     }
 
-
     @Override
     public void deleteContestEntry(DeleteContestEntryRequest request) {
         // Check if the contest entry exists
@@ -171,7 +172,7 @@ public class ContestEntryServiceImpl implements ContestEntryService {
 
         // Delete the image if it exists
         if (contestEntry.getImage() != null) {
-            deleteImage(contestEntry.getImage(), "contest_entries");
+            imageService.deleteImage(contestEntry.getImage(), "contest_entries");
         }
 
         // Delete the contest entry
@@ -215,7 +216,7 @@ public class ContestEntryServiceImpl implements ContestEntryService {
         return contestEntries.stream().map(this::mapContestEntryToResponse).toList();
     }
 
-    private void validateContestEntryRequest(ContestEntryRequest request) {
+    private void validateContestEntryRequest(ContestEntryRequest request, boolean isUpdate) {
 
         if (!userDao.existsById(request.getUserId())) {
             throw new NotFoundException("User with ID does not exist.");
@@ -235,6 +236,17 @@ public class ContestEntryServiceImpl implements ContestEntryService {
 
         if (contestDao.isContestClosed(request.getContestId())) {
             throw new ConflictException("Cannot update contest entry as the contest is closed.");
+        }
+
+        // CREATE
+        if (!isUpdate && contestEntryDao.existsByNameAndContestId(request.getName(), request.getContestId())) {
+            throw new ConflictException("Contest entry with the same name already exists for this contest.");
+        }
+
+        // UPDATE
+        if (isUpdate && !contestEntryDao.existsContestEntryWithNameExcludingId(
+                request.getName(), request.getContestId(), request.getId())) {
+            throw new ConflictException("Contest entry with the same name already exists for this contest, excluding the current entry.");
         }
     }
 

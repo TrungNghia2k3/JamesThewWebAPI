@@ -55,7 +55,7 @@ public class LoginServlet extends HttpServlet {
 
             // Authenticate
             String jwt = authService.authenticate(loginRequest);
-            if (jwt != null) sendResponse(resp, success(200, "Login successful", jwt));
+            if (jwt != null) sendResponse(resp, success(201, "Login successful", jwt));
         } catch (JsonSyntaxException e) {
             sendResponse(resp, error(400, "Invalid JSON data"));
         } catch (IOException e) {

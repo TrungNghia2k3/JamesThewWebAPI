@@ -57,7 +57,7 @@ public class StaffPermissionsServlet extends HttpServlet {
             }
 
             staffPermissionsService.assignPermissionToStaff(userId, permissionId);
-            sendResponse(resp, success(200, "Permission assigned successfully"));
+            sendResponse(resp, success(201, "Permission assigned successfully"));
         } catch (JsonSyntaxException e) {
             sendResponse(resp, error(400, "Invalid JSON data"));
         } catch (IOException e) {
